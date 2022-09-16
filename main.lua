@@ -1,4 +1,57 @@
 Settings = getgenv().Settings
+if not Settings then
+	Settings = {
+    		Disabled = false,
+    		Scans = {
+        		["Amount"] = 3, -- scans entire game, laggy on some games with alot of instances
+        		["Cooldown"] = 30, -- cooldown between scans
+        		["SlowerChecks"] = true, -- less laggy scans (reccomended)
+    		},
+    		Main = {
+        		["Low Rendering"] = true, -- helps with performance
+        		["Extreme Low Rendering"] = true, -- more performance enhancing stuff
+        		["No Particles"] = true, -- disables particles like fire, trails, forcefields, etc.
+        		["No Explosions"] = true, -- disables explosions
+        		["Low Quality Parts"] = true, -- makes parts plastic looking, this boosts fps
+        		["Low Water Graphics"] = true, -- makes water ugly but helps with fps
+        		["Low Graphics"] = true, -- makes graphics a little worse
+        		["No Shadows"] = true, -- disables shadows, helps with performance
+        		["FPS Unlocker"] = true, -- unlocks fps, heavily reccomended
+        		["No Camera Effects"] = true, -- no lighting effects like sun rays and bloom
+        		["Fullbright"] = true, -- makes in-game world fully bright (no dark spots / shadows)
+        		["Limit FPS When Unfocused"] = true, -- doesnt render when you are tabbed out
+        		["StreamingEnabled"] = true, -- loads parts with minimal lag and network issues
+    		},
+    		Characters = {
+        		["No Clothes"] = false, -- clothes (shirts,pants) wont appear on characters
+    		},
+    		Images = {
+        		["Destroy"] = false, -- will destroy decals, makes checks slower
+        		["Invisible"] = false, -- will make images invisible
+        		["Low Detail"] = true, -- not sure if low detail works
+    		},
+    		Decals = {
+        		["Invisible"] = false, -- make decals invis, put this on iyw
+        		["Destroy"] = false, -- same as invis but it destroys it instead, slower
+    		},
+    		Meshes = {
+        		["Destroy"] = false, -- destroy meshes, dont reccomend having it on bc it makes checks slower
+        		["Remove Texture"] = true, -- makes meshes have a gray look
+    		},
+    		Textures = {
+        		["Destroy"] = false, -- destroy textures in game, can make some parts look bad
+        		["Invisible"] = true, -- makes checks faster and basically same as destroy
+    		},
+    		Players = {
+        		["Ignore LocalPlayer"] = false, -- ignore your character
+        		["Ignore Everyone"] = true, -- ignore all characters
+    		},
+		Other = {
+        		["Print"] = false, -- printconsole() support
+        		["Notification"] = false, -- reccomend keeping this disabled, can get annoying
+    		}
+	}
+end
 --------------------------------
 if not game:IsLoaded() then
 	game.Loaded:Wait()
