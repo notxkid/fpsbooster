@@ -3,7 +3,6 @@ Settings = getgenv().Settings
 if not game:IsLoaded() then
 	game.Loaded:Wait()
 end
-
 if Settings["Disabled"] then
 	return
 end
@@ -25,12 +24,10 @@ local RunService = game:GetService("RunService")
 local Lighting = game:GetService("Lighting")
 local UserInputService = game:GetService("UserInputService")
 local LocalPlayer = Players.LocalPlayer
-
 local NetworkSettings = settings():GetService("NetworkSettings")
 local RenderSettings = settings():GetService("RenderSettings")
 local UserGameSettings = UserSettings():GetService("UserGameSettings")
 local SetProperty = sethiddenproperty or set_hidden_property or set_hidden_prop or function(Instance, Property, Value) pcall(Closure(function() Instance[Property] = Value end)) end
-
 local InstancesList = {"DataModelMesh", "FaceInstance", "ParticleEmitter", "Trail", "Smoke", "Fire", "Sparkles", "PostEffect", "SpotLight", "Explosion", "Clothing", "BasePart", "ForceField", "MeshPart", "Texture", "PartOperation", "UnionOperation", "Model", "NetworkClient"}
 local EnabledList = {"ParticleEmitter", "Trail", "Smoke", "Fire", "Sparkles", "PostEffect", "SpotLight"}
 local OriginalScanAmount = Settings.Scans.Amount
@@ -135,6 +132,7 @@ function Check(obj)
 				obj.Shiny = 1
 			end
 		elseif obj:IsA("MeshPart") then
+			obj.CollisionFidelity = "Hull"
 			if Settings.Meshes.Destroy then
 				RunService.Heartbeat:Wait()
 				obj:Destroy()
@@ -155,6 +153,8 @@ function Check(obj)
 			if Settings.Textures.Destroy then
 			   	RunService.Heartbeat:Wait()
 				obj:Destroy()
+			elseif Settings.Textures.Invisible then
+				obj.Texture = ""
 			end
 		elseif table.find(EnabledList,obj.ClassName) and Settings.Main["No Particles"] then
 			obj.Enabled = false
@@ -163,6 +163,9 @@ function Check(obj)
 		elseif obj:IsA("BasePart") and Settings.Main["Low Quality Parts"] then
 			obj.Material = Enum.Material.Plastic
 			obj.Reflectance = 0
+			if obj.ClassName == "UnionOperation" then
+				obj.CollisionFidelity = "Hull"	
+			end
 		elseif table.find(InstancesList,obj.ClassName) then
 			RunService.Heartbeat:Wait()
 			obj:Destroy()
@@ -181,22 +184,26 @@ function Scan(value)
 	if Settings.Scans.SlowerChecks then
 	      WaitNumber = 100
 	end
-	Notify("ULTRA FPS BOOSTER", "Scanning instances...", 3)
+	Notify("FPS BOOSTER", "Scanning instances...", 3)
 	
 	print(#Descendants .." found.")
 	if value == true then
-		Notify("ULTRA FPS BOOSTER", #Descendants .. " instances found! You may experience some lag...",5)
+		Notify("FPS BOOSTER", #Descendants .. " instances found! You may experience some lag...",5)
 	end
 	for i,v in pairs(Descendants) do
 		Check(v)
 		print("Checked "..i.."/"..#Descendants.." instances.")
 		if i == WaitNumber then
 			RunService.Heartbeat:Wait()
-			WaitNumber = WaitNumber + 500
+			if Settings.Scans.SlowerChecks then
+				WaitNumber = WaitNumber + 100
+			else
+				WaitNumber = WaitNumber + 500
+			end
 		end
 	end
 	if value == true then
-		Notify("ULTRA FPS BOOSTER", "First scan completed, it might take another ".. Settings.Scans.Cooldown .." seconds for it to fully optimize!", 10)
+		Notify("FPS BOOSTER", "First scan completed, it might take another ".. Settings.Scans.Cooldown .." seconds for it to fully optimize!", 10)
 	end
 	return
 end
@@ -222,7 +229,6 @@ if Settings.Main["Low Rendering"] and settings() then
 	settings().Rendering.EditQualityLevel = Enum.QualityLevel.Level01
 	settings().Rendering.AutoFRMLevel = 1
 	settings().Rendering.GraphicsMode = Enum.GraphicsMode.OpenGL
-
 	if Settings.Main["Extreme Low Rendering"] and UserGameSettings then
 	      	SetProperty(UserGameSettings, "SavedQualityLevel", Enum.SavedQualitySetting.QualityLevel1)
 	   	SetProperty(RenderSettings, "MeshPartDetailLevel", Enum.MeshPartDetailLevel.Level01)
@@ -266,28 +272,20 @@ if Settings.Main["StreamingEnabled"] then
 	workspace.StreamingEnabled = true
 end
 --------------------------------
-Notify("ULTRA FPS BOOSTER","Loaded Core Features!",5)
+Notify("FPS BOOSTER","Loaded Core Features!",5)
 Scan(true)
 print("Done with first scan, starting rescans now.")
-
 spawn(function()
 	while true do
-		Settings.Scans.Amount = Settings.Scans.Amount - 1
 		if Settings.Scans.Amount == 0 then
 			print("Rescanning done, enjoy FPS Booster!")
 			break
 		end
 		Scan(false)
 		task.wait(Settings.Scans.Cooldown)
+		Settings.Scans.Amount = Settings.Scans.Amount - 1
 	end
 end)
-
-game.DescendantAdded:Connect(function(obj)
-	if not obj:IsDescendantOf(Players) then
-		Check(obj)
-	end
-end)
-
 if Settings.Main["Fullbright"] then
 	RunService.RenderStepped:Connect(function()
 		Lighting.Brightness = 2
@@ -299,4 +297,9 @@ if Settings.Main["Fullbright"] then
 		Lighting.OutdoorAmbient = Color3.fromRGB(128, 128, 128)
 	end)
 end
+game.DescendantAdded:Connect(function(obj)
+	if not obj:IsDescendantOf(Players) then
+		Check(obj)
+	end
+end)
 --------------------------------
