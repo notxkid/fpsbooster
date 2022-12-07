@@ -1,8 +1,11 @@
 --[[
-	Credits:
+	Credits to parts of the script:
 	https://discord.gg/VtKMMKFQyY
 	https://discord.gg/VtKMMKFQyY
 	https://discord.gg/VtKMMKFQyY
+
+	THE ORIGINAL FPS BOOSTER:
+	https://github.com/CasperFlyModz/discord.gg-rips/blob/main/FPSBooster.lua
 ]]
 
 Settings = getgenv().Settings
