@@ -1,3 +1,10 @@
+--[[
+	Credits:
+	https://discord.gg/VtKMMKFQyY
+	https://discord.gg/VtKMMKFQyY
+	https://discord.gg/VtKMMKFQyY
+]]
+
 Settings = getgenv().Settings
 --------------------------------
 if not game:IsLoaded() then
