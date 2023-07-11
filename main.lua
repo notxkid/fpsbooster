@@ -276,11 +276,39 @@ if Settings.Main["No Camera Effects"] then
 	for i,v in pairs(Lighting:GetDescendants()) do
 		if v:IsA("PostEffect") or v:IsA("BlurEffect") or v:IsA("SunRaysEffect") or v:IsA("ColorCorrectionEffect") or v:IsA("BloomEffect") or v:IsA("DepthOfFieldEffect") then
 			v.Enabled = false
+            v.Changed:Connect(function()
+                v.Enabled = false
+            end)
+        elseif v:IsA("Atmosphere") then
+            v.Haze = 0
+            v.Glare = 0
+            v.Density = 0.39500001072883606
+            v.Offset = 0
+            v.Changed:Connect(function()
+                v.Haze = 0
+                v.Glare = 0
+                v.Density = 0.39500001072883606
+                v.Offset = 0
+            end)
 		end
 	end
     Lighting.DescendantAdded:Connect(function(v)
         if v:IsA("PostEffect") or v:IsA("BlurEffect") or v:IsA("SunRaysEffect") or v:IsA("ColorCorrectionEffect") or v:IsA("BloomEffect") or v:IsA("DepthOfFieldEffect") then
 			v.Enabled = false
+            v.Changed:Connect(function()
+                v.Enabled = false
+            end)
+        elseif v:IsA("Atmosphere") then
+            v.Haze = 0
+            v.Glare = 0
+            v.Density = 0.39500001072883606
+            v.Offset = 0
+            v.Changed:Connect(function()
+                v.Haze = 0
+                v.Glare = 0
+                v.Density = 0.39500001072883606
+                v.Offset = 0
+            end)
 		end
     end)
 end
