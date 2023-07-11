@@ -1,8 +1,10 @@
 --[[
+    This script is just multiple FPS Booster scripts scripted into one.
+
 	Credits to parts of the script:
+    Infinite Yield
 	https://discord.gg/VtKMMKFQyY
-	https://discord.gg/VtKMMKFQyY
-	https://discord.gg/VtKMMKFQyY
+    https://v3rmillion.net/showthread.php?tid=975134
 
 	THE ORIGINAL FPS BOOSTER:
 	https://github.com/CasperFlyModz/discord.gg-rips/blob/main/FPSBooster.lua
@@ -250,17 +252,19 @@ if Settings.Main["Low Rendering"] and settings() then
 	settings().Rendering.EditQualityLevel = Enum.QualityLevel.Level01
 	settings().Rendering.AutoFRMLevel = 1
 	settings().Rendering.GraphicsMode = Enum.GraphicsMode.OpenGL
-	if Settings.Main["Extreme Low Rendering"] and UserGameSettings then
-	      	SetProperty(UserGameSettings, "SavedQualityLevel", Enum.SavedQualitySetting.QualityLevel1)
-	   	SetProperty(RenderSettings, "MeshPartDetailLevel", Enum.MeshPartDetailLevel.Level01)
-		SetProperty(RenderSettings, "EagerBulkExecution", false)
-		SetProperty(NetworkSettings, "IncomingReplicationLag", -1000)
-		SetProperty(workspace, "LevelOfDetail", Enum.ModelLevelOfDetail.Disabled)
-		SetProperty(workspace, 'StreamingTargetRadius', 64)
-        	SetProperty(workspace, 'StreamingPauseMode', 2)
-		settings().Physics.PhysicsEnvironmentalThrottle = 1
-		workspace.ClientAnimatorThrottling = Enum.ClientAnimatorThrottlingMode.Enabled
-		workspace.InterpolationThrottling = Enum.InterpolationThrottlingMode.Enabled
+	if Settings.Main["Extreme Low Rendering"] then
+        pcall(function()
+            SetProperty(UserGameSettings, "SavedQualityLevel", Enum.SavedQualitySetting.QualityLevel1)
+	   	    SetProperty(RenderSettings, "MeshPartDetailLevel", Enum.MeshPartDetailLevel.Level01)
+		    SetProperty(RenderSettings, "EagerBulkExecution", false)
+		    SetProperty(NetworkSettings, "IncomingReplicationLag", -1000)
+		    SetProperty(workspace, "LevelOfDetail", Enum.ModelLevelOfDetail.Disabled)
+		    SetProperty(workspace, 'StreamingTargetRadius', 64)
+            SetProperty(workspace, 'StreamingPauseMode', 2)
+		    settings().Physics.PhysicsEnvironmentalThrottle = 1
+		    workspace.ClientAnimatorThrottling = Enum.ClientAnimatorThrottlingMode.Enabled
+		    workspace.InterpolationThrottling = Enum.InterpolationThrottlingMode.Enabled
+        end)
 	end
 end
 if Settings.Main["FPS Unlocker"] then
@@ -274,17 +278,24 @@ if Settings.Main["No Camera Effects"] then
 			v.Enabled = false
 		end
 	end
+    Lighting.DescendantAdded:Connect(function(v)
+        if v:IsA("PostEffect") or v:IsA("BlurEffect") or v:IsA("SunRaysEffect") or v:IsA("ColorCorrectionEffect") or v:IsA("BloomEffect") or v:IsA("DepthOfFieldEffect") then
+			v.Enabled = false
+		end
+    end)
 end
 if Settings.Main["Limit FPS When Unfocused"] then
 	UserInputService.WindowFocused:Connect(function()
-       		RunService:Set3dRenderingEnabled(true)
+       	RunService:Set3dRenderingEnabled(true)
 		if Settings.Main["FPS Unlocker"] and setfpscap and type(setfpscap) == "function" then
    			setfpscap(9999)
+        elseif setfpscap and type(setfpscap) == "function" then
+            setfpscap(60)
 		end
 	end)
 	UserInputService.WindowFocusReleased:Connect(function()
-       		RunService:Set3dRenderingEnabled(false)
-   		if Settings.Main["FPS Unlocker"] and setfpscap and type(setfpscap) == "function" then
+       	RunService:Set3dRenderingEnabled(false)
+   		if setfpscap and type(setfpscap) == "function" then
    			setfpscap(5)
 		end
 	end)
@@ -308,7 +319,14 @@ spawn(function()
 	end
 end)
 if Settings.Main["Fullbright"] then
-	RunService.RenderStepped:Connect(function()
+    Lighting.Brightness = 2
+	Lighting.ClockTime = 14
+	Lighting.TimeOfDay = 14
+	Lighting.FogEnd = 100000
+	Lighting.FogStart = 0
+	Lighting.GlobalShadows = false
+	Lighting.OutdoorAmbient = Color3.fromRGB(128, 128, 128)
+	Lighting.Changed:Connect(function()
 		Lighting.Brightness = 2
 		Lighting.ClockTime = 14
 		Lighting.TimeOfDay = 14
