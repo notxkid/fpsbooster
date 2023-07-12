@@ -366,6 +366,7 @@ if Settings.Main["Fullbright"] then
 end
 game.DescendantAdded:Connect(function(obj)
 	if not obj:IsDescendantOf(Players) then
+		RunService.Heartbeat:Wait()
 		Check(obj)
 	end
 end)
